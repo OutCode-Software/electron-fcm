@@ -1,0 +1,36 @@
+{
+  "name": "electron-fcm-demo",
+  "version": "1.0.0",
+  "description": "A demo FCM client",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "dirs-dummy",
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": true
+    }
+  },
+  "keywords": [
+    "demo",
+    "FCM",
+    "push messages"
+  ],
+  "author": "Dirs",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "^1.8.2",
+    "electron-builder": "^23.6.0"
+  },
+  "dependencies": {
+    "electron-push-receiver": "^1.2.4",
+    "firebase": "^9.17.1"
+  }
+}
