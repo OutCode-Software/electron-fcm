@@ -1,164 +1,116 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Hello World!</title>
-  </head>
-  <body>
-    <h1>Testing cloud messaging manually</h1>
-    <a href="https://test.dirs.app/">test dirs app</a>
 
-    <!-- All of the Node.js APIs are available in this renderer process. -->
- 
-<!-- 
-    <script>
-      // You can also require other files to run in this process
-     
+<head>
+  <meta charset="UTF-8">
+  <title>Aegix</title>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
 
-// This file is required by the index.html file and will
-// be executed in the renderer process for that window.
-// All of the Node.js APIs are available in this process.
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyCBVu59nrWiGoZpYo_rWg6lN7KRqrS5ToU",
+      authDomain: "dir-s-1373.firebaseapp.com",
+      databaseURL: "https://dir-s-1373.firebaseio.com",
+      projectId: "dir-s-1373",
+      storageBucket: "dir-s-1373.appspot.com",
+      messagingSenderId: "405351706879",
+      appId: "1:405351706879:web:c7d9158c977816dc",
+      measurementId: "G-8C0P7K4S7G"
+    };
 
-const { ipcRenderer } = require ('electron')
-const {
-  START_NOTIFICATION_SERVICE,
-  NOTIFICATION_SERVICE_STARTED,
-  NOTIFICATION_SERVICE_ERROR,
-  NOTIFICATION_RECEIVED,
-  ON_NOTIFICATION_RECEIVED,
-  TOKEN_UPDATED,
-} = require ('electron-push-receiver/src/constants')
-
-// Listen for service successfully started
-ipcRenderer.on(NOTIFICATION_SERVICE_STARTED, (_, token) => {
-  console.log('service successfully started', token)
-  
-})
-
-// Handle notification errors
-ipcRenderer.on(NOTIFICATION_SERVICE_ERROR, (_, error) => {
-  console.log('notification error', error)
-})
-
-// Send FCM token to backend
-ipcRenderer.on(TOKEN_UPDATED, (_, token) => {
-  console.log('token updated', token)
-})
-
-// Display notification
-ipcRenderer.on(NOTIFICATION_RECEIVED, (_, serverNotificationPayload) => {
-  // check to see if payload contains a body string, if it doesn't consider it a silent push
-  if (serverNotificationPayload.notification.body){
-    // payload has a body, so show it to the user
-    console.log('display notification', serverNotificationPayload)
-    let myNotification = new Notification(serverNotificationPayload.notification.title, {
-      body: serverNotificationPayload.notification.body
-    })
-    
-    myNotification.onclick = () => {
-      console.log('Notification clicked')
-    }  
-  } else {
-    // payload has no body, so consider it silent (and just consider the data portion)
-    console.log('do something with the key/value pairs in the data', serverNotificationPayload.data)
-  }
-})
-// Start service
-const senderId = '793985869924' // <-- replace with FCM sender ID from FCM web admin under Settings->Cloud Messaging
-console.log('starting service and registering a client')
-ipcRenderer.send(START_NOTIFICATION_SERVICE, senderId)
-
-
-    </script> -->
-    <script type="module">
-      // Import the functions you need from the SDKs you need
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
-      import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-analytics.js";
-      // TODO: Add SDKs for Firebase products that you want to use
-      // https://firebase.google.com/docs/web/setup#available-libraries
-    
-      // Your web app's Firebase configuration
-      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-      const firebaseConfig = {
-        apiKey: "AIzaSyCBVu59nrWiGoZpYo_rWg6lN7KRqrS5ToU",
-        authDomain: "dir-s-1373.firebaseapp.com",
-        databaseURL: "https://dir-s-1373.firebaseio.com",
-        projectId: "dir-s-1373",
-        storageBucket: "dir-s-1373.appspot.com",
-        messagingSenderId: "405351706879",
-        appId: "1:405351706879:web:c7d9158c977816dc",
-        measurementId: "G-8C0P7K4S7G"
-      };
-    
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const analytics = getAnalytics(app);
-    </script>
-    <script>
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  </script>
+  <script>
     try {
-        const { ipcRenderer } = require('electron')
-        const remote = require('electron').remote
-        const {
-            START_NOTIFICATION_SERVICE,
-            NOTIFICATION_SERVICE_STARTED,
-            NOTIFICATION_SERVICE_ERROR,
-            NOTIFICATION_RECEIVED,
-            TOKEN_UPDATED,
-        } = window.require('electron-push-receiver/src/constants')
-        window.showWindowAlarm = remote.getGlobal('global').showWindowAlarm
+      const { ipcRenderer, app } = require('electron')
+      const remote = require('electron').remote
+      app.setName('aegix')
+      const {
+        START_NOTIFICATION_SERVICE,
+        NOTIFICATION_SERVICE_STARTED,
+        NOTIFICATION_SERVICE_ERROR,
+        NOTIFICATION_RECEIVED,
+        TOKEN_UPDATED,
+      } = window.require('electron-push-receiver/src/constants')
+      window.showWindowAlarm = remote?.getGlobal('global').showWindowAlarm
 
-        // Listen for service successfully started
-        ipcRenderer.on(NOTIFICATION_SERVICE_STARTED, (_, token) => {
-            console.log('service successfully started', token)
-            window.Notifications.notificationToken.value = token;
-        })
+      // Listen for service successfully started
+      ipcRenderer.on(NOTIFICATION_SERVICE_STARTED, (_, token) => {
+        console.log('service successfully started', token)
+        if (window.Notifications)
+          window.Notifications.notificationToken.value = token;
+      })
 
-        // Handle notification errors
-        ipcRenderer.on(NOTIFICATION_SERVICE_ERROR, (_, error) => {
-            console.log('notification error', error)
-        })
+      // Handle notification errors
+      ipcRenderer.on(NOTIFICATION_SERVICE_ERROR, (_, error) => {
+        console.log('notification error', error)
+      })
 
-        // Send FCM token to backend
-        ipcRenderer.on(TOKEN_UPDATED, (_, token) => {
-            console.log('got token', token)
-            window.Notifications.notificationToken.value = token;
-        })
+      // Send FCM token to backend
+      ipcRenderer.on(TOKEN_UPDATED, (_, token) => {
+        console.log('got token', token)
+        if (window.Notifications)
+          window.Notifications.notificationToken.value = token;
+      })
 
-        // // Display notification
-        // ipcRenderer.on(NOTIFICATION_RECEIVED, (_, serverNotificationPayload) => {
-        //     console.log('got notification', serverNotificationPayload)
-        //     window.Notifications.payloadReceived(serverNotificationPayload)
-        //     window.showWindowAlarm()
-        // })
+      // // Display notification
+      // ipcRenderer.on(NOTIFICATION_RECEIVED, (_, serverNotificationPayload) => {
+      //     console.log('got notification', serverNotificationPayload)
+      //     window.Notifications?.payloadReceived(serverNotificationPayload)
+      //     window.showWindowAlarm()
+      // })
 
-        // Display notification
-ipcRenderer.on(NOTIFICATION_RECEIVED, (_, serverNotificationPayload) => {
-  // check to see if payload contains a body string, if it doesn't consider it a silent push
-  if (serverNotificationPayload.notification.body){
-    // payload has a body, so show it to the user
-    console.log('display notification', serverNotificationPayload)
-    let myNotification = new Notification(serverNotificationPayload.notification.title, {
-      body: serverNotificationPayload.notification.body
-    })
-    
-    myNotification.onclick = () => {
-      console.log('Notification clicked')
-    }  
-  } else {
-    // payload has no body, so consider it silent (and just consider the data portion)
-    console.log('do something with the key/value pairs in the data', serverNotificationPayload.data)
-  }
-})
+      // Display notification
+      ipcRenderer.on(NOTIFICATION_RECEIVED, (_, serverNotificationPayload) => {
+        // check to see if payload contains a body string, if it doesn't consider it a silent push
+        if (serverNotificationPayload.notification.body) {
+          // payload has a body, so show it to the user
+          console.log('display notification', serverNotificationPayload.notification.image);
+          let myNotification = new Notification(serverNotificationPayload.notification.title, {
+            body: serverNotificationPayload.notification.data,
+            title: 'aegix',
+            icon: serverNotificationPayload.notification.image // Set your icon path here
+          });
 
-        // Start service
-        const senderId = "405351706879"
-        console.log('starting service and registering a client')
-        ipcRenderer.send(START_NOTIFICATION_SERVICE, senderId)
+          myNotification.onclick = () => {
+            console.log('Notification clicked');
+          };
+        } else {
+          // payload has no body, so consider it silent (and just consider the data portion)
+          console.log('do something with the key/value pairs in the data', serverNotificationPayload.data);
+        }
+      });
 
-        window.usingElectron = true
-    } catch(e) {
-        console.log(`Probably not using Electron - got error ${e} trying to set up using Electron Push.`)
+      // Somewhere in your code, before the ipcRenderer.on(...) block
+
+
+
+      // Start service
+      const senderId = "405351706879"
+      console.log('starting service and registering a client')
+      ipcRenderer.send(START_NOTIFICATION_SERVICE, senderId)
+
+      window.usingElectron = true
+
+
+    } catch (e) {
+      console.log(`Probably not using Electron - got error ${e} trying to set up using Electron Push.`)
     }
-</script>
-  </body>
+  </script>
+</head>
+
+<body>
+  <h1>Testing cloud messaging manually</h1>
+  <a href="https://test.dirs.app/">test dirs app</a>
+
+</body>
+
 </html>
