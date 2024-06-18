@@ -1,6 +1,7 @@
 const { app, shell, BrowserWindow, ipcMain, Tray, Menu } = require("electron");
 const { setup: setupPushReceiver } = require("electron-push-receiver");
 const path = require("path");
+require("dotenv").config();
 
 let mainWindow;
 let tray = null;
@@ -22,7 +23,9 @@ function createWindow() {
     autoHideMenuBar: true, // Hide the default menu bar
   });
 
-  mainWindow.loadURL("http://localhost:4201/");
+  // mainWindow.loadURL("http://localhost:4201/");
+
+  mainWindow.loadURL(process.env.BASE_URL);
 
   setupPushReceiver(mainWindow.webContents);
 
@@ -59,7 +62,7 @@ app.on("ready", () => {
     },
   ]);
 
-  tray.setToolTip("My Electron App");
+  tray.setToolTip("Aim Aegix");
   tray.setContextMenu(contextMenu);
 
   tray.on("click", () => {
@@ -84,8 +87,11 @@ if (process.platform === "win32" || process.platform === "win64") {
 }
 
 ipcMain.on("focus-window", () => {
+  console.log({ mainWindow });
   if (mainWindow) {
     if (mainWindow.isMinimized()) mainWindow.restore();
     mainWindow.focus();
+  } else {
+    createWindow();
   }
 });
