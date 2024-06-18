@@ -8,7 +8,7 @@
     "start": "electron .",
     "dist": "electron-builder",
     "ele-build": "electron-builder",
-    "build-electron": "yarn ele-build --config electron-builder-conf.js"
+    "build-electron": "rm -rf dist/ && yarn ele-build --config electron-builder-conf.js"
 
   },
   "build": "./electron-builder-config.js",
